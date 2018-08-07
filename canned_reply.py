@@ -1,23 +1,24 @@
-import random
-import re
+import random    #랜덤이라는 모듈 넣기 
+import re 
 from urllib.parse import quote
 
 import requests
 
 import secret
 
+#general이라는 라이브러리 만듦
 generals = {
     r'.*\b주사위.*': [
-        lambda g: '주사위를 던졌습니다 => ' + str(random.randint(1, 6)),
+        lambda g: '주사위를 던졌습니다 => ' + str(random.randint(1, 6)),    #숫자와 글자를 함께 이어주기 위해 str로 지정해주고 +로 이어줌 
     ],
     r'.*\b동전.*': [
-        lambda g: '동전을 던졌습니다 => ' + random.choice(
+        lambda g: '동전을 던졌습니다 => ' + random.choice(      #choice는 가중치를 줄 수 없기 때문에 앞면과 뒷면이 더 많은 빈도로 choice될 수 있게 
             ['앞면', '뒷면'] * 5 + ['옆면!?', '사라졌다!']
         ),
     ],
     r'(.+?)(이?랑|하고|와|과|,)\s+(.+?)((가|이|이?랑|하고| 중).+)?\?$': [
         lambda g: random.choice([
-            g[0],
+            g[0],           #캡쳐그룹
             g[2],
             '글쎄?',
             '모두 쬲!',
@@ -85,7 +86,7 @@ mentions = {
 
 def reply_to_pattern(text, pattern_map):
     for pattern, replies in pattern_map.items():
-        m = re.match(pattern, text)
+        m = re.match(pattern, text)                         #text에서 pattern에 일치하는 것만 뽑아온다
         if m:
             reply = random.choice(replies)
             if type(reply) == str:
